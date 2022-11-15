@@ -1,0 +1,28 @@
+{
+  "name": "@slonigiraf/helpers",
+  "version": "1.0.4",
+  "description": "UI helper functions",
+  "main": "lib/index.js",
+  "scripts": {
+    "build": "npx tsc",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/slonigiraf/helpers.git"
+  },
+  "author": "Denis Reshetov",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/slonigiraf/helpers/issues"
+  },
+  "homepage": "https://github.com/slonigiraf/helpers#readme",
+  "devDependencies": {
+    "typescript": "^4.8.4"
+  },
+  "dependencies": {
+    "@polkadot/types": "^9.8.1",
+    "@polkadot/util": "^10.1.12",
+    "ipfs-core": "^0.14.1"
+  }
+}
