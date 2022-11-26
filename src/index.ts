@@ -1,6 +1,5 @@
 import { IKeyringPair } from '@polkadot/types/types';
 import { numberToU8a, stringToU8a } from '@polkadot/util';
-import { CID } from 'ipfs-core';
 import { IPFS } from 'ipfs-core';
 
 // Converts a JS number to a byte array of specified length
@@ -72,7 +71,7 @@ export async function getIPFSContentID(ipfs: IPFS, content: string) {
   return file.cid;
 }
 // A helper wrapper to get a text from IPFS CID
-export async function getIPFSDataFromContentID(ipfs: IPFS, cid: CID) {
+export async function getIPFSDataFromContentID(ipfs: IPFS, cid: string) {
   const text = [];
   for await (const chunk of ipfs.cat(cid)) {
     text.push(chunk);
