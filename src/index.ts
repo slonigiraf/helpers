@@ -16,12 +16,14 @@ export function numberToU8ArrayOfLength(value: number, length: number) {
 // Converts a recommendation letter public info to a byte array to be signed by a referee
 export function getPublicDataToSignByReferee(
   letterId: number,
+  blockNumber: number,
   refereeU8: Uint8Array,
   workerU8: Uint8Array,
   amount: number,
 ) {
   return new Uint8Array([
     ...numberToU8ArrayOfLength(letterId, 4),
+    ...numberToU8ArrayOfLength(blockNumber, 8),
     ...refereeU8,
     ...workerU8,
     ...numberToU8ArrayOfLength(amount, 16),
@@ -31,6 +33,7 @@ export function getPublicDataToSignByReferee(
 export function getPrivateDataToSignByReferee(
   textHash: string,
   letterId: number,
+  blockNumber: number,
   refereeU8: Uint8Array,
   workerU8: Uint8Array,
   amount: number,
@@ -38,6 +41,7 @@ export function getPrivateDataToSignByReferee(
   return new Uint8Array([
     ...stringToU8a(textHash),
     ...numberToU8ArrayOfLength(letterId, 4),
+    ...numberToU8ArrayOfLength(blockNumber, 8),
     ...refereeU8,
     ...workerU8,
     ...numberToU8ArrayOfLength(amount, 16),
@@ -46,6 +50,7 @@ export function getPrivateDataToSignByReferee(
 // Converts a recommendation letter info to a byte array to be signed by worker to enable employer to penalize a referee
 export function getDataToSignByWorker(
   letterId: number,
+  blockNumber: number,
   refereeU8: Uint8Array,
   workerU8: Uint8Array,
   amount: number,
@@ -54,6 +59,7 @@ export function getDataToSignByWorker(
 ) {
   return new Uint8Array([
     ...numberToU8ArrayOfLength(letterId, 4),
+    ...numberToU8ArrayOfLength(blockNumber, 8),
     ...refereeU8,
     ...workerU8,
     ...numberToU8ArrayOfLength(amount, 16),
