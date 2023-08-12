@@ -65,7 +65,6 @@ export function getPrivateDataToSignByReferee(
 }
 // Converts a recommendation letter info to a byte array to be signed by worker to enable employer to penalize a referee
 export function getDataToSignByWorker(
-  genesisU8: Uint8Array,
   letterId: number,
   blockNumber: BN,
   refereeU8: Uint8Array,
@@ -75,7 +74,6 @@ export function getDataToSignByWorker(
   employerU8: Uint8Array,
 ) {
   return new Uint8Array([
-    ...genesisU8,
     ...numberToU8ArrayOfLength(letterId, 4),
     ...bnToU8ArrayOfLength(blockNumber, 8),
     ...refereeU8,

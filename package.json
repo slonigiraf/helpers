@@ -1,6 +1,6 @@
 {
   "name": "@slonigiraf/helpers",
-  "version": "5.0.0",
+  "version": "5.1.0",
   "description": "UI helper functions",
   "main": "lib/index.js",
   "scripts": {
