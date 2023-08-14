@@ -2,6 +2,10 @@ import { IKeyringPair } from '@polkadot/types/types';
 import { numberToU8a, stringToU8a, bnToU8a } from '@polkadot/util';
 import { IPFS } from 'ipfs-core';
 import BN from 'bn.js';
+import { CID } from 'multiformats/cid';
+import { sha256 } from 'multiformats/hashes/sha2'
+
+export const CODEC = 0x71;
 
 // Converts a JS number to a byte array of specified length
 export function numberToU8ArrayOfLength(value: number, length: number) {
@@ -89,8 +93,13 @@ export function sign(signer: IKeyringPair, data: Uint8Array) {
 }
 // A helper wrapper to get IPFS CID from a text
 export async function getIPFSContentID(ipfs: IPFS, content: string) {
-  const file = await ipfs.add(content);
-  return file.cid;
+  // const { cid: newCid } = await ipfs.add(content, {
+  //   cidVersion: 1,
+  //   hashAlg: 'sha2-256'
+  // });
+  // return newCid.toString();
+  const cid = await ipfs.dag.put(content, { storeCodec: 'dag-cbor', hashAlg: 'sha2-256' });
+  return cid.toString();
 }
 // A helper wrapper to get a text from IPFS CID
 export async function getIPFSDataFromContentID(ipfs: IPFS, cid: string) {
@@ -99,4 +108,26 @@ export async function getIPFSDataFromContentID(ipfs: IPFS, cid: string) {
     text.push(chunk);
   }
   return text.toString();
+}
+
+export async function extractSha256FromCIDv1(cidStr: string) {
+  const cid = CID.parse(cidStr);
+  if (cid.version !== 1) {
+    throw new Error('The provided CID is not a CIDv1.');
+  }
+  console.log("CODE: ", cid.code);
+  const multihash = cid.multihash;
+  if (multihash.code !== 0x12) {
+    throw new Error('The provided CID does not use the SHA-256 hash function.');
+  }
+  // This gets you the raw bytes
+  const rawBytes = multihash.bytes;
+  return rawBytes;
+}
+
+export async function getCIDFromBytes(bytes: Uint8Array) {
+  const hash = await sha256.digest(bytes);  
+  const cid = new CID(1, 0x71, hash, bytes);
+  // console.log("cod: "+ cid.toString());
+  return cid.toString();
 }
