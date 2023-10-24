@@ -96,11 +96,6 @@ export function sign(signer: IKeyringPair, data: Uint8Array) {
 }
 // A helper wrapper to get IPFS CID from a text
 export async function getIPFSContentID(ipfs: IPFS, content: string) {
-  // const { cid: newCid } = await ipfs.add(content, {
-  //   cidVersion: 1,
-  //   hashAlg: 'sha2-256'
-  // });
-  // return newCid.toString();
   const cid = await ipfs.dag.put(content, { storeCodec: 'dag-cbor', hashAlg: 'sha2-256' });
   return cid.toString();
 }
