@@ -1,8 +1,7 @@
 import { IKeyringPair } from '@polkadot/types/types';
 import { numberToU8a, stringToU8a, bnToU8a } from '@polkadot/util';
 import BN from 'bn.js';
-import { CID } from 'multiformats/cid';
-import { IPFSHTTPClient } from 'kubo-rpc-client'
+import { IPFSHTTPClient, CID } from 'kubo-rpc-client'
 
 // ------
 export const CODEC = 0x71;
@@ -100,12 +99,10 @@ export async function getIPFSContentID(ipfs: IPFSHTTPClient, content: string) {
   return cid.toString();
 }
 // A helper wrapper to get a text from IPFS CID
-export async function getIPFSDataFromContentID(ipfs: IPFSHTTPClient, cid: string) {
-  const text = [];
-  for await (const chunk of ipfs.cat(cid)) {
-    text.push(chunk);
-  }
-  return text.toString();
+export async function getIPFSDataFromContentID(ipfs: IPFSHTTPClient, cidStr: string): Promise<unknown> {
+  const cid = CID.parse(cidStr);
+  const result = await ipfs.dag.get(cid);
+  return result;
 }
 
 export async function digestFromCIDv1(cidStr: string) {

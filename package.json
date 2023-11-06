@@ -1,6 +1,6 @@
 {
   "name": "@slonigiraf/helpers",
-  "version": "6.0.1",
+  "version": "6.0.3",
   "description": "UI helper functions",
   "main": "lib/index.js",
   "scripts": {
@@ -34,7 +34,6 @@
   "dependencies": {
     "@polkadot/types": "^9.8.1",
     "@polkadot/util": "^10.1.12",
-    "kubo-rpc-client": "^3.0.1",
-    "multiformats": "^9.9.0"
+    "kubo-rpc-client": "^3.0.1"
   }
 }
