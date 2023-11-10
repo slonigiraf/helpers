@@ -2,6 +2,7 @@ import { IKeyringPair } from '@polkadot/types/types';
 import { numberToU8a, stringToU8a, bnToU8a } from '@polkadot/util';
 import BN from 'bn.js';
 import { IPFSHTTPClient, CID } from 'kubo-rpc-client'
+import crypto from 'crypto';
 
 // ------
 export const CODEC = 0x71;
@@ -125,4 +126,35 @@ export async function getCIDFromBytes(digest: Uint8Array) {
   const cidBytes = new Uint8Array([...prefix, ...digest]);
   const cid = CID.decode(cidBytes);
   return cid.toString();
+}
+
+
+function encryptText(text: string, password: string, salt: string) {
+  const iv = crypto.randomBytes(16);
+  const key = crypto.scryptSync(password, salt, 32); // Using the provided salt for encryption
+  const cipher = crypto.createCipheriv('aes-256-cbc', key, iv);
+  let encrypted = cipher.update(text, 'utf8', 'hex');
+  encrypted += cipher.final('hex');
+  return iv.toString('hex') + encrypted;  // IV concatenated with encrypted text
+}
+
+function decryptText(encryptedText: string, password: string, salt: string) {
+  const iv = Buffer.from(encryptedText.substring(0, 32), 'hex');
+  const encrypted = encryptedText.substring(32);
+  const key = crypto.scryptSync(password, salt, 32); // Using the provided salt for decryption
+  const decipher = crypto.createDecipheriv('aes-256-cbc', key, iv);
+  let decrypted = decipher.update(encrypted, 'hex', 'utf8');
+  decrypted += decipher.final('utf8');
+  return decrypted;
+}
+
+export async function storeEncryptedTextOnIPFS(ipfs: any, text: string, password: string, salt: string) {
+  const encryptedText = encryptText(text, password, salt);
+  const cid = await getIPFSContentID(ipfs, encryptedText);
+  return cid;
+}
+
+export async function retrieveDecryptedDataFromIPFS(ipfs: any, cid: string, password: string, salt: string) {
+  const encryptedData = await getIPFSDataFromContentID(ipfs, cid);
+  return decryptText(encryptedData, password, salt);
 }
