@@ -74,6 +74,7 @@ export function getPrivateDataToSignByReferee(
 export function getDataToSignByWorker(
   letterId: number,
   blockNumber: BN,
+  blockAllowed: BN,
   refereeU8: Uint8Array,
   workerU8: Uint8Array,
   amount: BN,
@@ -83,6 +84,7 @@ export function getDataToSignByWorker(
   return new Uint8Array([
     ...numberToU8ArrayOfLength(letterId, 4),
     ...bnToU8ArrayOfLength(blockNumber, 8),
+    ...bnToU8ArrayOfLength(blockAllowed, 8),
     ...refereeU8,
     ...workerU8,
     ...bnToU8ArrayOfLength(amount, 16),
